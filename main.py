@@ -2,20 +2,26 @@
 
 import csv 
 import datetime as dt
-
+import argparse
 
 def main():
     """Run the command-line program: read the log and print the most active cookie(s)."""
 
-    target_date = dt.date.fromisoformat('2018-12-09')
-    records = read_cookie_records('cookie_log.csv')
+    parser = argparse.ArgumentParser(
+        description="Find the most active cookie(s) for a given UTC date."
+    )
+    parser.add_argument("-f", "--filename", required=True,
+                        help="path to the cookie log CSV file")
+    parser.add_argument("-d", "--date", required=True,
+                        help="UTC date in 'YYYY-MM-DD' format")
+    
+    args = parser.parse_args()
+    target_date = dt.date.fromisoformat(args.date)
+    records = read_cookie_records(args.filename)
     most_active_cookies = find_most_active_cookies(records, target_date)
 
     for cookie in most_active_cookies:
         print(cookie)
-
-
-
 
 def read_cookie_records(file_path):
     """Read the cookie log and return a list of cookie, UTC date pairs."""
