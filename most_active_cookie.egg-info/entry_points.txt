@@ -1,2 +1,0 @@
-[console_scripts]
-most-active-cookie = main:main
