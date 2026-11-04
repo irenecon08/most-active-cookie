@@ -10,7 +10,7 @@ import datetime as dt
 import sys
 
 
-def main():
+def main(argv=None):
     """Run the command-line program: read the log and print the most active cookie(s)."""
 
     parser = argparse.ArgumentParser(
@@ -21,12 +21,12 @@ def main():
     parser.add_argument("-d", "--date", required=True,
                         help="UTC date in 'YYYY-MM-DD' format")
     
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     try: 
         target_date = dt.date.fromisoformat(args.date)
     except ValueError:
-        print(f"Error: Invalid date '{args.date}', expected 'YYYY-MM-DD' format.", file=sys.stderr)
+        print(f"Error: Invalid date '{args.date}', expected 'YYYY-MM-DD' format. For example, '2019-06-18'", file=sys.stderr)
         sys.exit(1)
 
     try: 
