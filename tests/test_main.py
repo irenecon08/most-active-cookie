@@ -1,7 +1,8 @@
-import pytest
-import datetime as dt 
-from main import find_most_active_cookies, read_cookie_records, main
+import datetime as dt
 
+import pytest
+
+from main import find_most_active_cookies, main, read_cookie_records
 
 BRIEF_EXAMPLE_LOG = (
     "cookie,timestamp\n"
@@ -48,9 +49,7 @@ def test_returns_all_cookies_if_tied():
 def test_converts_offset_timestamps_to_utc_date(tmp_path):
     log_file = tmp_path / "cookie_log.csv"
     log_file.write_text(
-        "cookie,timestamp\n"
-        "A,2018-12-09T23:30:00-02:00\n"
-        "B,2018-12-09T00:30:00+01:00\n"
+        "cookie,timestamp\nA,2018-12-09T23:30:00-02:00\nB,2018-12-09T00:30:00+01:00\n"
     )
 
     records = read_cookie_records(log_file)
@@ -95,7 +94,7 @@ def test_header_only_file_returns_no_records(tmp_path, capsys):
 
     records = read_cookie_records(log_file)
 
-    assert records == [] 
+    assert records == []
 
     captured = capsys.readouterr()
     assert captured.err == ""
@@ -133,10 +132,10 @@ def test_skips_rows_with_invalid_timestamps(tmp_path, capsys):
     assert records == [("AtY0laUfhglK3lC7", dt.date(2018, 12, 9))]
 
     warnings = capsys.readouterr().err
-    assert 'line 3' in warnings
-    assert 'line 4' in warnings
-    assert 'line 5' in warnings
-    assert "Invalid timestamp" in warnings 
+    assert "line 3" in warnings
+    assert "line 4" in warnings
+    assert "line 5" in warnings
+    assert "Invalid timestamp" in warnings
 
 
 def test_skips_rows_with_timestamps_with_no_offsets(tmp_path, capsys):
@@ -152,14 +151,14 @@ def test_skips_rows_with_timestamps_with_no_offsets(tmp_path, capsys):
     records = read_cookie_records(log_file)
 
     assert records == [
-        ("AtY0laUfhglK3lC7", dt.date(2018, 12, 9)), 
-        ("4sMM2LxV07bPJzwf", dt.date(2018, 12, 8))
-        ]
+        ("AtY0laUfhglK3lC7", dt.date(2018, 12, 9)),
+        ("4sMM2LxV07bPJzwf", dt.date(2018, 12, 8)),
+    ]
 
     warnings = capsys.readouterr().err
-    assert 'line 3' in warnings
-    assert 'line 5' in warnings
-    assert "Timestamp has no offset" in warnings 
+    assert "line 3" in warnings
+    assert "line 5" in warnings
+    assert "Timestamp has no offset" in warnings
 
 
 def test_cli_exits_with_error_for_invalid_date(tmp_path, capsys):
@@ -190,7 +189,9 @@ def test_cli_exits_with_error_for_missing_file(tmp_path, capsys):
         (["-f", "cookie_log.csv"], "-d"),
     ],
 )
-def test_cli_exits_with_usage_error_when_option_missing(capsys, arguments, missing_option):
+def test_cli_exits_with_usage_error_when_option_missing(
+    capsys, arguments, missing_option
+):
     with pytest.raises(SystemExit) as exit_info:
         main(arguments)
 
