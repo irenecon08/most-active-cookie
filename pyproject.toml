@@ -9,7 +9,7 @@ dependencies = []
 dev = ["pytest", "ruff"]
 
 [project.scripts]
-most-active-cookie = "most_active_cookie.main:main"
+most-active-cookie = "most_active_cookie.cli:main"
 
 [build-system]
 requires = ["setuptools>=61"]

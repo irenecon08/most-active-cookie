@@ -2,7 +2,9 @@ import datetime as dt
 
 import pytest
 
-from most_active_cookie.main import find_most_active_cookies, main, read_cookie_records
+from most_active_cookie.analyser import find_most_active_cookies
+from most_active_cookie.cli import main
+from most_active_cookie.log_reader import read_cookie_records
 
 BRIEF_EXAMPLE_LOG = (
     "cookie,timestamp\n"

@@ -1,0 +1,25 @@
+
+
+def find_most_active_cookies(records, target_date):
+    """Return the cookie(s) seen most often on the target date (empty list if none)."""
+
+    cookie_counts = {}
+
+    for cookie, record_date in records:
+        if record_date == target_date:
+            if cookie in cookie_counts:
+                cookie_counts[cookie] += 1
+            else:
+                cookie_counts[cookie] = 1
+
+    most_active_cookies = []
+
+    if len(cookie_counts) != 0:
+        max_count = max(cookie_counts.values())
+
+        for cookie, count in cookie_counts.items():
+            if count == max_count:
+                most_active_cookies.append(cookie)
+
+    return most_active_cookies
+
