@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import argparse
 import datetime as dt
 import sys
@@ -7,7 +9,7 @@ from most_active_cookie.exceptions import CookieLogError
 from most_active_cookie.log_reader import read_cookie_records
 
 
-def build_arg_parser():
+def build_arg_parser() -> argparse.ArgumentParser:
     """Create the argument parser for the -f and -d command-line options."""
     parser = argparse.ArgumentParser(
         description="Find the most active cookie(s) for a given UTC date."
@@ -22,7 +24,7 @@ def build_arg_parser():
     return parser
 
 
-def main(argv=None):
+def main(argv: list[str] | None = None) -> None:
     """Run the command-line program: read the log and print the most active cookie(s)."""
 
     parser = build_arg_parser()
