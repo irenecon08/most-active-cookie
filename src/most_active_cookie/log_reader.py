@@ -1,15 +1,18 @@
+from __future__ import annotations
+
 import csv
 import datetime as dt
 import sys
+from pathlib import Path
 
 from most_active_cookie.exceptions import EmptyLogError, InvalidHeaderError
 from most_active_cookie.models import CookieRecord
 
 
-def read_cookie_records(file_path):
+def read_cookie_records(file_path: str | Path) -> list[CookieRecord]:
     """Read the cookie log and return CookieRecords."""
 
-    records = []
+    records: list[CookieRecord] = []
 
     with open(file_path, newline="") as f:
         reader = csv.DictReader(f)
