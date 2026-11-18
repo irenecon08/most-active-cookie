@@ -67,4 +67,3 @@ def test_returns_cookie_from_single_record():
     result = find_most_active_cookies(records, dt.date(2018, 12, 9))
 
     assert result == ["A"]
-

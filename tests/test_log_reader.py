@@ -2,6 +2,7 @@ import datetime as dt
 
 import pytest
 
+from most_active_cookie.exceptions import EmptyLogError, InvalidHeaderError
 from most_active_cookie.log_reader import read_cookie_records
 from most_active_cookie.models import CookieRecord
 
@@ -19,11 +20,12 @@ def test_converts_offset_timestamps_to_utc_date(tmp_path):
         CookieRecord(cookie="B", date=dt.date(2018, 12, 8)),
     ]
 
+
 def test_raises_error_for_empty_file(tmp_path):
     log_file = tmp_path / "cookie_log.csv"
     log_file.write_text("")
 
-    with pytest.raises(ValueError, match="File is empty"):
+    with pytest.raises(EmptyLogError, match="File is empty"):
         read_cookie_records(log_file)
 
 
@@ -32,7 +34,7 @@ def test_raises_error_for_wrong_header(tmp_path, header):
     log_file = tmp_path / "cookie_log.csv"
     log_file.write_text(header + "\n")
 
-    with pytest.raises(ValueError, match="Unexpected header"):
+    with pytest.raises(InvalidHeaderError, match="Unexpected header"):
         read_cookie_records(log_file)
 
 
@@ -77,7 +79,9 @@ def test_skips_rows_with_invalid_timestamps(tmp_path, capsys):
 
     records = read_cookie_records(log_file)
 
-    assert records == [CookieRecord(cookie="AtY0laUfhglK3lC7", date=dt.date(2018, 12, 9))]
+    assert records == [
+        CookieRecord(cookie="AtY0laUfhglK3lC7", date=dt.date(2018, 12, 9))
+    ]
 
     warnings = capsys.readouterr().err
     assert "line 3" in warnings

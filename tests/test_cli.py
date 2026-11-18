@@ -64,6 +64,3 @@ def test_cli_exits_with_usage_error_when_option_missing(
     stderr = capsys.readouterr().err
     assert "required" in stderr
     assert missing_option in stderr
-
-
-

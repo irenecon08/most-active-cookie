@@ -3,6 +3,7 @@ import datetime as dt
 import sys
 
 from most_active_cookie.analyser import find_most_active_cookies
+from most_active_cookie.exceptions import CookieLogError
 from most_active_cookie.log_reader import read_cookie_records
 
 
@@ -41,7 +42,7 @@ def main(argv=None):
     except FileNotFoundError:
         print(f"Error: File not found: '{args.filename}'", file=sys.stderr)
         sys.exit(1)
-    except ValueError as e:
+    except CookieLogError as e:
         print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
 

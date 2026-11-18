@@ -1,5 +1,3 @@
-
-
 def find_most_active_cookies(records, target_date):
     """Return the cookie(s) seen most often on the target date (empty list if none)."""
 
@@ -22,4 +20,3 @@ def find_most_active_cookies(records, target_date):
                 most_active_cookies.append(cookie)
 
     return most_active_cookies
-

@@ -2,11 +2,12 @@ import csv
 import datetime as dt
 import sys
 
+from most_active_cookie.exceptions import EmptyLogError, InvalidHeaderError
 from most_active_cookie.models import CookieRecord
 
 
 def read_cookie_records(file_path):
-    """Read the cookie log and return a list of cookie, UTC date pairs."""
+    """Read the cookie log and return CookieRecords."""
 
     records = []
 
@@ -14,10 +15,10 @@ def read_cookie_records(file_path):
         reader = csv.DictReader(f)
 
         if reader.fieldnames is None:
-            raise ValueError("File is empty: no header row found.")
+            raise EmptyLogError("File is empty: no header row found.")
 
         elif "cookie" not in reader.fieldnames or "timestamp" not in reader.fieldnames:
-            raise ValueError(
+            raise InvalidHeaderError(
                 f"Unexpected header: {reader.fieldnames}, expected 'cookie,timestamp'"
             )
 

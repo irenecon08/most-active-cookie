@@ -8,4 +8,3 @@ class CookieRecord:
 
     cookie: str
     date: dt.date
-    
