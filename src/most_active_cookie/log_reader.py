@@ -2,6 +2,8 @@ import csv
 import datetime as dt
 import sys
 
+from most_active_cookie.models import CookieRecord
+
 
 def read_cookie_records(file_path):
     """Read the cookie log and return a list of cookie, UTC date pairs."""
@@ -51,6 +53,6 @@ def read_cookie_records(file_path):
             datetime_cookie_utc = datetime_cookie.astimezone(dt.timezone.utc)
             date_cookie = datetime_cookie_utc.date()
 
-            records.append((cookie, date_cookie))
+            records.append(CookieRecord(cookie=cookie, date=date_cookie))
 
     return records

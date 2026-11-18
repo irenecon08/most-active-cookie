@@ -5,12 +5,12 @@ def find_most_active_cookies(records, target_date):
 
     cookie_counts = {}
 
-    for cookie, record_date in records:
-        if record_date == target_date:
-            if cookie in cookie_counts:
-                cookie_counts[cookie] += 1
+    for record in records:
+        if record.date == target_date:
+            if record.cookie in cookie_counts:
+                cookie_counts[record.cookie] += 1
             else:
-                cookie_counts[cookie] = 1
+                cookie_counts[record.cookie] = 1
 
     most_active_cookies = []
 

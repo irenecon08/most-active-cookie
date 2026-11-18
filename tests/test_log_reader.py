@@ -3,6 +3,7 @@ import datetime as dt
 import pytest
 
 from most_active_cookie.log_reader import read_cookie_records
+from most_active_cookie.models import CookieRecord
 
 
 def test_converts_offset_timestamps_to_utc_date(tmp_path):
@@ -14,8 +15,8 @@ def test_converts_offset_timestamps_to_utc_date(tmp_path):
     records = read_cookie_records(log_file)
 
     assert records == [
-        ("A", dt.date(2018, 12, 10)),
-        ("B", dt.date(2018, 12, 8)),
+        CookieRecord(cookie="A", date=dt.date(2018, 12, 10)),
+        CookieRecord(cookie="B", date=dt.date(2018, 12, 8)),
     ]
 
 def test_raises_error_for_empty_file(tmp_path):
@@ -58,7 +59,7 @@ def test_skips_rows_with_missing_values(tmp_path, capsys):
 
     records = read_cookie_records(log_file)
 
-    assert records == [("A", dt.date(2018, 12, 9))]
+    assert records == [CookieRecord(cookie="A", date=dt.date(2018, 12, 9))]
     warnings = capsys.readouterr().err
     assert "line 3" in warnings
     assert "line 4" in warnings
@@ -76,7 +77,7 @@ def test_skips_rows_with_invalid_timestamps(tmp_path, capsys):
 
     records = read_cookie_records(log_file)
 
-    assert records == [("AtY0laUfhglK3lC7", dt.date(2018, 12, 9))]
+    assert records == [CookieRecord(cookie="AtY0laUfhglK3lC7", date=dt.date(2018, 12, 9))]
 
     warnings = capsys.readouterr().err
     assert "line 3" in warnings
@@ -98,8 +99,8 @@ def test_skips_rows_with_timestamps_with_no_offsets(tmp_path, capsys):
     records = read_cookie_records(log_file)
 
     assert records == [
-        ("AtY0laUfhglK3lC7", dt.date(2018, 12, 9)),
-        ("4sMM2LxV07bPJzwf", dt.date(2018, 12, 8)),
+        CookieRecord(cookie="AtY0laUfhglK3lC7", date=dt.date(2018, 12, 9)),
+        CookieRecord(cookie="4sMM2LxV07bPJzwf", date=dt.date(2018, 12, 8)),
     ]
 
     warnings = capsys.readouterr().err
@@ -121,8 +122,8 @@ def test_assigns_day_boundary_timestamps_to_correct_date(tmp_path):
     records = read_cookie_records(log_file)
 
     assert records == [
-        ("NextDay", dt.date(2018, 12, 10)),
-        ("LastSecond", dt.date(2018, 12, 9)),
-        ("FirstSecond", dt.date(2018, 12, 9)),
-        ("PrevDay", dt.date(2018, 12, 8)),
+        CookieRecord(cookie="NextDay", date=dt.date(2018, 12, 10)),
+        CookieRecord(cookie="LastSecond", date=dt.date(2018, 12, 9)),
+        CookieRecord(cookie="FirstSecond", date=dt.date(2018, 12, 9)),
+        CookieRecord(cookie="PrevDay", date=dt.date(2018, 12, 8)),
     ]

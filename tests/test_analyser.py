@@ -1,14 +1,15 @@
 import datetime as dt
 
 from most_active_cookie.analyser import find_most_active_cookies
+from most_active_cookie.models import CookieRecord
 
 
 def test_returns_single_most_active_cookie():
     # Arrange: A appears twice, B once, all on the same day
     records = [
-        ("A", dt.date(2018, 12, 9)),
-        ("A", dt.date(2018, 12, 9)),
-        ("B", dt.date(2018, 12, 9)),
+        CookieRecord(cookie="A", date=dt.date(2018, 12, 9)),
+        CookieRecord(cookie="A", date=dt.date(2018, 12, 9)),
+        CookieRecord(cookie="B", date=dt.date(2018, 12, 9)),
     ]
 
     # Act
@@ -20,11 +21,11 @@ def test_returns_single_most_active_cookie():
 
 def test_returns_all_cookies_if_tied():
     records = [
-        ("A", dt.date(2018, 12, 9)),
-        ("A", dt.date(2018, 12, 9)),
-        ("B", dt.date(2018, 12, 9)),
-        ("B", dt.date(2018, 12, 9)),
-        ("C", dt.date(2018, 12, 9)),
+        CookieRecord(cookie="A", date=dt.date(2018, 12, 9)),
+        CookieRecord(cookie="A", date=dt.date(2018, 12, 9)),
+        CookieRecord(cookie="B", date=dt.date(2018, 12, 9)),
+        CookieRecord(cookie="B", date=dt.date(2018, 12, 9)),
+        CookieRecord(cookie="C", date=dt.date(2018, 12, 9)),
     ]
 
     result = find_most_active_cookies(records, dt.date(2018, 12, 9))
@@ -34,13 +35,13 @@ def test_returns_all_cookies_if_tied():
 
 def test_ignores_records_on_other_dates():
     records = [
-        ("X", dt.date(2018, 12, 10)),
-        ("X", dt.date(2018, 12, 10)),
-        ("A", dt.date(2018, 12, 9)),
-        ("A", dt.date(2018, 12, 9)),
-        ("B", dt.date(2018, 12, 9)),
-        ("X", dt.date(2018, 12, 8)),
-        ("X", dt.date(2018, 12, 8)),
+        CookieRecord(cookie="X", date=dt.date(2018, 12, 10)),
+        CookieRecord(cookie="X", date=dt.date(2018, 12, 10)),
+        CookieRecord(cookie="A", date=dt.date(2018, 12, 9)),
+        CookieRecord(cookie="A", date=dt.date(2018, 12, 9)),
+        CookieRecord(cookie="B", date=dt.date(2018, 12, 9)),
+        CookieRecord(cookie="X", date=dt.date(2018, 12, 8)),
+        CookieRecord(cookie="X", date=dt.date(2018, 12, 8)),
     ]
 
     result = find_most_active_cookies(records, dt.date(2018, 12, 9))
@@ -53,7 +54,7 @@ def test_returns_empty_list_for_no_records():
 
 
 def test_returns_empty_list_when_no_records_on_target_date():
-    records = [("A", dt.date(2018, 12, 8))]
+    records = [CookieRecord(cookie="A", date=dt.date(2018, 12, 8))]
 
     result = find_most_active_cookies(records, dt.date(2018, 12, 9))
 
@@ -61,7 +62,7 @@ def test_returns_empty_list_when_no_records_on_target_date():
 
 
 def test_returns_cookie_from_single_record():
-    records = [("A", dt.date(2018, 12, 9))]
+    records = [CookieRecord(cookie="A", date=dt.date(2018, 12, 9))]
 
     result = find_most_active_cookies(records, dt.date(2018, 12, 9))
 
