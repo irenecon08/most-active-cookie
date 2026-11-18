@@ -26,7 +26,7 @@ def test_cli_prints_most_active_cookie_for_brief_example(tmp_path, capsys):
     assert captured.err == ""
 
 
-def test_cli_exits_with_error_for_invalid_date(tmp_path, capsys):
+def test_cli_exits_with_error_for_invalid_date(tmp_path, caplog):
     log_file = tmp_path / "cookie_logs.csv"
     log_file.write_text(BRIEF_EXAMPLE_LOG)
 
@@ -34,17 +34,17 @@ def test_cli_exits_with_error_for_invalid_date(tmp_path, capsys):
         main(["-f", str(log_file), "-d", "09-12-2018"])
 
     assert exit_info.value.code == 1
-    assert "Invalid date" in capsys.readouterr().err
+    assert "Invalid date" in caplog.text
 
 
-def test_cli_exits_with_error_for_missing_file(tmp_path, capsys):
+def test_cli_exits_with_error_for_missing_file(tmp_path, caplog):
     missing_file = tmp_path / "missing.csv"
 
     with pytest.raises(SystemExit) as exit_info:
         main(["-f", str(missing_file), "-d", "2018-12-08"])
 
     assert exit_info.value.code == 1
-    assert "File not found" in capsys.readouterr().err
+    assert "File not found" in caplog.text
 
 
 @pytest.mark.parametrize(

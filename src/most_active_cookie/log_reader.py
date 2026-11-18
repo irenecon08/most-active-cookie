@@ -2,15 +2,17 @@ from __future__ import annotations
 
 import csv
 import datetime as dt
-import sys
+import logging
 from pathlib import Path
 
 from most_active_cookie.exceptions import EmptyLogError, InvalidHeaderError
 from most_active_cookie.models import CookieRecord
 
+logger = logging.getLogger(__name__)
+
 
 def read_cookie_records(file_path: str | Path) -> list[CookieRecord]:
-    """Read the cookie log and return CookieRecords."""
+    """Read the cookie log and return one CookieRecord per valid row, logging a warning for each skipped row."""
 
     records: list[CookieRecord] = []
 
@@ -30,26 +32,26 @@ def read_cookie_records(file_path: str | Path) -> list[CookieRecord]:
             timestamp = row["timestamp"]
 
             if not cookie or not timestamp:
-                print(
-                    f"Warning: Skipping line {reader.line_num}: Missing cookie or timestamp.",
-                    file=sys.stderr,
+                logger.warning(
+                    "Skipping line %d: Missing cookie or timestamp.", reader.line_num
                 )
-
                 continue
 
             try:
                 datetime_cookie = dt.datetime.fromisoformat(timestamp)
             except ValueError:
-                print(
-                    f"Warning: Skipping line {reader.line_num}: Invalid timestamp, '{timestamp}'.",
-                    file=sys.stderr,
+                logger.warning(
+                    "Skipping line %d: Invalid timestamp, %r.",
+                    reader.line_num,
+                    timestamp,
                 )
                 continue
 
             if datetime_cookie.tzinfo is None:
-                print(
-                    f"Warning: Skipping line {reader.line_num}: Timestamp has no offset, '{timestamp}'.",
-                    file=sys.stderr,
+                logger.warning(
+                    "Skipping line %d: Timestamp has no offset, %r.",
+                    reader.line_num,
+                    timestamp,
                 )
                 continue
 

@@ -50,7 +50,7 @@ def test_header_only_file_returns_no_records(tmp_path, capsys):
     assert captured.err == ""
 
 
-def test_skips_rows_with_missing_values(tmp_path, capsys):
+def test_skips_rows_with_missing_values(tmp_path, caplog):
     log_file = tmp_path / "cookie_log.csv"
     log_file.write_text(
         "cookie,timestamp\n"
@@ -62,12 +62,12 @@ def test_skips_rows_with_missing_values(tmp_path, capsys):
     records = read_cookie_records(log_file)
 
     assert records == [CookieRecord(cookie="A", date=dt.date(2018, 12, 9))]
-    warnings = capsys.readouterr().err
+    warnings = caplog.text
     assert "line 3" in warnings
     assert "line 4" in warnings
 
 
-def test_skips_rows_with_invalid_timestamps(tmp_path, capsys):
+def test_skips_rows_with_invalid_timestamps(tmp_path, caplog):
     log_file = tmp_path / "cookie_log.csv"
     log_file.write_text(
         "cookie,timestamp\n"
@@ -83,14 +83,14 @@ def test_skips_rows_with_invalid_timestamps(tmp_path, capsys):
         CookieRecord(cookie="AtY0laUfhglK3lC7", date=dt.date(2018, 12, 9))
     ]
 
-    warnings = capsys.readouterr().err
+    warnings = caplog.text
     assert "line 3" in warnings
     assert "line 4" in warnings
     assert "line 5" in warnings
     assert "Invalid timestamp" in warnings
 
 
-def test_skips_rows_with_timestamps_with_no_offsets(tmp_path, capsys):
+def test_skips_rows_with_timestamps_with_no_offsets(tmp_path, caplog):
     log_file = tmp_path / "cookie_log.csv"
     log_file.write_text(
         "cookie,timestamp\n"
@@ -107,7 +107,7 @@ def test_skips_rows_with_timestamps_with_no_offsets(tmp_path, capsys):
         CookieRecord(cookie="4sMM2LxV07bPJzwf", date=dt.date(2018, 12, 8)),
     ]
 
-    warnings = capsys.readouterr().err
+    warnings = caplog.text
     assert "line 3" in warnings
     assert "line 5" in warnings
     assert "Timestamp has no offset" in warnings
