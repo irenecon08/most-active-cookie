@@ -15,15 +15,16 @@ BRIEF_EXAMPLE_LOG = (
 )
 
 
-def test_cli_prints_most_active_cookie_for_brief_example(tmp_path, capsys):
+def test_cli_prints_most_active_cookie_for_brief_example(tmp_path, capsys, caplog):
     log_file = tmp_path / "cookie_logs.csv"
     log_file.write_text(BRIEF_EXAMPLE_LOG)
 
     main(["-f", str(log_file), "-d", "2018-12-09"])
 
     captured = capsys.readouterr()
+
     assert captured.out == "AtY0laUfhglK3lC7\n"
-    assert captured.err == ""
+    assert caplog.text == ""
 
 
 def test_cli_exits_with_error_for_invalid_date(tmp_path, caplog):

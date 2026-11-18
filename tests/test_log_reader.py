@@ -38,7 +38,7 @@ def test_raises_error_for_wrong_header(tmp_path, header):
         read_cookie_records(log_file)
 
 
-def test_header_only_file_returns_no_records(tmp_path, capsys):
+def test_header_only_file_returns_no_records(tmp_path, caplog):
     log_file = tmp_path / "cookie_log.csv"
     log_file.write_text("cookie,timestamp\n")
 
@@ -46,8 +46,7 @@ def test_header_only_file_returns_no_records(tmp_path, capsys):
 
     assert records == []
 
-    captured = capsys.readouterr()
-    assert captured.err == ""
+    assert caplog.text == ""
 
 
 def test_skips_rows_with_missing_values(tmp_path, caplog):
